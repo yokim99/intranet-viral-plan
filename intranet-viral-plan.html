@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内网分享裂变活动方案</title>
+<style>
+  :root {
+    --huawei-red: #C7000B;
+    --huawei-red-light: #E8333D;
+    --huawei-red-dark: #990009;
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --text-soft: #555;
+    --border: #e8e8e8;
+    --green: #2e9e5b;
+    --amber: #e8a317;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Microsoft YaHei", "微软雅黑", -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+  /* 顶部横幅 */
+  .hero {
+    background: linear-gradient(135deg, var(--huawei-red-dark), var(--huawei-red), var(--huawei-red-light));
+    color: #fff;
+    padding: 56px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .hero h1 { font-size: 32px; font-weight: 700; position: relative; z-index: 1; }
+  .hero .sub { margin-top: 12px; font-size: 16px; opacity: 0.92; position: relative; z-index: 1; }
+  .hero .tag {
+    display: inline-block; margin-top: 18px;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 18px; border-radius: 20px;
+    font-size: 13px; position: relative; z-index: 1;
+  }
+  /* 容器 */
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px; }
+  /* 区块标题 */
+  section { padding: 40px 0; }
+  .sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .sec-num {
+    background: var(--huawei-red);
+    color: #fff;
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px;
+    flex-shrink: 0;
+  }
+  .sec-title { font-size: 22px; font-weight: 700; color: var(--text); }
+  /* 卡片 */
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+  .card h3 { font-size: 17px; color: var(--huawei-red); margin-bottom: 12px; }
+  .card p { color: var(--text-soft); margin-bottom: 8px; }
+  /* 指标表 */
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+  th { background: #fdf0f1; color: var(--huawei-red); font-weight: 600; }
+  td:first-child { font-weight: 600; color: var(--text); }
+  .target { color: var(--huawei-red); font-weight: 700; }
+  /* 三层机制 */
+  .layer {
+    border-left: 4px solid var(--huawei-red);
+    background: var(--card);
+    border-radius: 0 12px 12px 0;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .layer .badge {
+    display: inline-block;
+    background: var(--huawei-red);
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .layer h3 { font-size: 17px; margin-bottom: 6px; }
+  .layer .desc { color: var(--text-soft); font-size: 14px; margin-bottom: 10px; }
+  .layer ul { list-style: none; }
+  .layer li { padding: 5px 0 5px 22px; position: relative; font-size: 14px; color: var(--text-soft); }
+  .layer li::before { content: "▸"; position: absolute; left: 4px; color: var(--huawei-red); font-weight: 700; }
+  /* 阶梯进度 */
+  .steps { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .step {
+    flex: 1; min-width: 130px;
+    background: #fdf6f6;
+    border: 1px solid #f0d9db;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .step .num { font-size: 24px; font-weight: 700; color: var(--huawei-red); }
+  .step .lbl { font-size: 12px; color: var(--text-soft); margin-top: 4px; }
+  /* 旅程流程 */
+  .flow {
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .flow-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 0;
+  }
+  .flow-dot {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--huawei-red); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .flow-text { font-size: 14px; color: var(--text-soft); padding-top: 5px; }
+  .flow-arrow { text-align: center; color: var(--huawei-red); font-size: 18px; margin: -6px 0 -6px 15px; }
+  /* 节奏时间轴 */
+  .timeline { position: relative; padding-left: 8px; }
+  .tl-item {
+    display: flex; gap: 16px; padding: 12px 0;
+    border-left: 2px solid var(--border);
+    padding-left: 20px; margin-left: 8px;
+    position: relative;
+  }
+  .tl-item::before {
+    content: "";
+    position: absolute; left: -7px; top: 18px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--huawei-red);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--huawei-red);
+  }
+  .tl-stage { font-weight: 700; color: var(--huawei-red); width: 80px; flex-shrink: 0; font-size: 14px; }
+  .tl-content { font-size: 14px; color: var(--text-soft); }
+  /* 洞察框 */
+  .insight {
+    background: linear-gradient(135deg, #fff5f5, #fff);
+    border: 1px solid #f3d4d6;
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-top: 8px;
+  }
+  .insight h3 { color: var(--huawei-red); font-size: 16px; margin-bottom: 10px; }
+  .insight p { color: var(--text-soft); font-size: 14px; }
+  .insight .key { background: #fce8ea; color: var(--huawei-red); padding: 1px 6px; border-radius: 3px; font-weight: 600; }
+  /* 双列 */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } .hero h1 { font-size: 24px; } }
+  /* 页脚 */
+  footer {
+    background: #2b2b2b; color: #aaa;
+    text-align: center; padding: 28px 20px;
+    font-size: 13px;
+  }
+  footer strong { color: #fff; }
+  .pill { display: inline-block; background: #eee; color: #555; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin: 2px; }
+  .pill-red { background: #fce8ea; color: var(--huawei-red); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>内网分享裂变活动方案</h1>
+  <div class="sub">邀请同事装机得奖励，越早邀请奖励越多</div>
+  <div class="tag">目标：产品在内网快速分享与下载激活</div>
+</div>
+
+<div class="wrap">
+
+  <!-- 一、活动定位与核心指标 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">1</div>
+      <div class="sec-title">活动定位与核心指标</div>
+    </div>
+    <div class="card">
+      <h3>核心目标</h3>
+      <p>通过内网员工分享专属邀请链接，驱动产品在内网快速传播与下载激活。</p>
+      <h3 style="margin-top:18px;">关键指标漏斗</h3>
+      <table>
+        <tr><th>层级</th><th>指标定义</th><th>目标值</th></tr>
+        <tr><td>L1 分享率</td><td>分享人数 / 活动参与人数</td><td class="target">≥ 35%</td></tr>
+        <tr><td>L2 点击转化</td><td>邀请链接点击 / 分享人数</td><td class="target">≥ 60%</td></tr>
+        <tr><td>L3 下载</td><td>下载完成 / 点击</td><td class="target">≥ 50%</td></tr>
+        <tr><td>L4 激活</td><td>首次登录 / 下载</td><td class="target">≥ 80%</td></tr>
+        <tr><td>L5 二次裂变</td><td>被邀请人再分享比例</td><td class="target">≥ 25%</td></tr>
+      </table>
+      <p style="margin-top:14px; font-size:13px; color:#999;">最终目标：7天内激活人数 = 种子用户数 × 35% × 60% × 50% × 80% × (1 + 25% + 25%² + …)</p>
+    </div>
+  </section>
+
+  <!-- 二、裂变机制设计 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">2</div>
+      <div class="sec-title">裂变机制设计（三层递进）</div>
+    </div>
+
+    <div class="layer">
+      <span class="badge">第一层</span>
+      <h3>个人阶梯奖励 — 驱动首次分享</h3>
+      <div class="desc">让每个员工都有动力主动分享，早期参与者收益最大。</div>
+      <div class="steps">
+        <div class="step"><div class="num">+10</div><div class="lbl">邀请1人激活</div></div>
+        <div class="step"><div class="num">+30</div><div class="lbl">邀请3人（累计）</div></div>
+        <div class="step"><div class="num">+60</div><div class="lbl">邀请5人+实物</div></div>
+        <div class="step"><div class="num">+110</div><div class="lbl">邀请10人+徽章</div></div>
+      </div>
+      <p style="margin-top:12px; font-size:13px; color:var(--text-soft);">积分可兑换：咖啡券、午餐补贴、定制周边、带薪调休半天等</p>
+    </div>
+
+    <div class="layer">
+      <span class="badge">第二层</span>
+      <h3>团队 PK 榜 — 驱动持续传播</h3>
+      <div class="desc">用团队荣誉感放大个人动力，不惩罚只激励。</div>
+      <ul>
+        <li>按部门/小组自动归队，实时更新团队邀请榜</li>
+        <li>每日播报前三名团队，活动结束 Top3 全员额外奖励</li>
+        <li>设置"逆袭奖"——最后3天上升最快的团队额外加分</li>
+      </ul>
+    </div>
+
+    <div class="layer">
+      <span class="badge">第三层</span>
+      <h3>被邀请人即时反馈 — 驱动二次裂变</h3>
+      <div class="desc">让被邀请人下载后自然想分享，形成闭环。</div>
+      <ul>
+        <li>新用户首次激活后弹窗："你是 XX 邀请来的，TA 获得 10 积分"</li>
+        <li>新用户立即获得新人礼包（专属皮肤 / 高级功能7天体验）</li>
+        <li>新用户随即看到自己的邀请链接 + 阶梯奖励说明</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 三、用户完整旅程 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">3</div>
+      <div class="sec-title">用户完整旅程</div>
+    </div>
+    <div class="card">
+      <div class="flow">
+        <div class="flow-item"><div class="flow-dot">1</div><div class="flow-text">种子用户收到活动通知</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-dot">2</div><div class="flow-text">打开活动落地页（看到自己的邀请码 + 奖励规则 + 当前排名）</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-dot">3</div><div class="flow-text">复制邀请链接 / 一键分享到内网 IM（飞书 / 钉钉 / 企微）</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-dot">4</div><div class="flow-text">被邀请人点击链接 → 落地页（显示邀请人头像 + "下载后双方都得奖励"）</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-dot">5</div><div class="flow-text">被邀请人下载安装 → 首次启动登录激活</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-dot">6</div><div class="flow-text">系统判定：邀请人 +10 积分，被邀请人得新人礼包</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-dot">7</div><div class="flow-text">被邀请人看到自己的邀请链接 → 成为新的分享者 → 循环</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 四、落地页关键设计 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">4</div>
+      <div class="sec-title">落地页关键设计</div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>分享者落地页</h3>
+        <ul style="list-style:none;">
+          <li style="padding:4px 0 4px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 顶部：你的邀请链接 + 一键复制</li>
+          <li style="padding:4px 0 4px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 中部：阶梯奖励进度条（当前/奖励/下一档距离）</li>
+          <li style="padding:4px 0 4px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 底部：实时邀请记录列表</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>被邀请者落地页</h3>
+        <ul style="list-style:none;">
+          <li style="padding:4px 0 4px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 顶部：邀请人头像 + "下载后双方得奖励"</li>
+          <li style="padding:4px 0 4px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 中部：下载按钮（大号红色 CTA）</li>
+          <li style="padding:4px 0 4px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 底部：下载后自动跳转激活引导</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <h3>设计原则</h3>
+      <p><span class="pill pill-red">红色主CTA</span> <span class="pill">移动端适配</span> <span class="pill">分享链接带UTM参数</span> <span class="pill">内网IM分享多在手机打开</span></p>
+    </div>
+  </section>
+
+  <!-- 五、防刷机制 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">5</div>
+      <div class="sec-title">防刷机制</div>
+    </div>
+    <div class="card">
+      <table>
+        <tr><th>风险</th><th>对策</th></tr>
+        <tr><td>同一设备多账号</td><td>激活绑定设备指纹 + 工号，同设备只计一次</td></tr>
+        <tr><td>虚假点击</td><td>激活才计奖励，点击不计</td></tr>
+        <tr><td>自邀自奖</td><td>邀请人和被邀请人工号不能相同</td></tr>
+        <tr><td>批量注册</td><td>新账号需内网域邮箱验证才生效</td></tr>
+        <tr><td>积分超发</td><td>设置活动总积分上限，超出转为荣誉榜</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 六、数据埋点 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">6</div>
+      <div class="sec-title">数据埋点清单</div>
+    </div>
+    <div class="card">
+      <h3>关键动作埋点</h3>
+      <table>
+        <tr><th>事件名</th><th>说明</th></tr>
+        <tr><td>share_click</td><td>分享按钮点击（含渠道：飞书/钉钉/复制链接）</td></tr>
+        <tr><td>invite_link_open</td><td>邀请链接被打开（含邀请人ID）</td></tr>
+        <tr><td>download_start</td><td>下载开始</td></tr>
+        <tr><td>download_complete</td><td>下载完成</td></tr>
+        <tr><td>activate_success</td><td>首次登录激活（含邀请人ID、被邀请人ID）</td></tr>
+        <tr><td>reward_grant</td><td>奖励发放（含类型、数量）</td></tr>
+      </table>
+      <p style="margin-top:14px; font-size:14px; color:var(--text-soft);">每日看板：分享漏斗图、Top10 邀请达人、部门激活热力图、每日新增激活曲线</p>
+    </div>
+  </section>
+
+  <!-- 七、活动节奏 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">7</div>
+      <div class="sec-title">活动节奏（7天）</div>
+    </div>
+    <div class="card">
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-stage">预热</div><div class="tl-content">D-3 ~ D-1：内网公告 + 领导带头分享 + 悬念海报</div></div>
+        <div class="tl-item"><div class="tl-stage">启动</div><div class="tl-content">D1：全员推送 + 落地页上线 + 种子用户率先分享</div></div>
+        <div class="tl-item"><div class="tl-stage">爬坡</div><div class="tl-content">D2 ~ D5：每日战报 + 部门 PK + 逆袭激励</div></div>
+        <div class="tl-item"><div class="tl-stage">冲刺</div><div class="tl-content">D6 ~ D7：倒计时提醒 + 最后冲刺榜 + 限时加倍</div></div>
+        <div class="tl-item"><div class="tl-stage">收尾</div><div class="tl-content">D8：颁奖公示 + 积分兑换 + 活动复盘</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 八、亮点与洞察 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">8</div>
+      <div class="sec-title">方案亮点与关键洞察</div>
+    </div>
+    <div class="card">
+      <h3>方案亮点</h3>
+      <ul style="list-style:none;">
+        <li style="padding:5px 0 5px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 三层递进机制覆盖个人、团队、被邀请人三个动力源</li>
+        <li style="padding:5px 0 5px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 阶梯奖励让早期参与者收益最大，制造紧迫感</li>
+        <li style="padding:5px 0 5px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 被邀请人即时反馈形成自然二次裂变，不靠强推</li>
+        <li style="padding:5px 0 5px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 团队 PK 用荣誉感而非惩罚，避免内卷负面</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>风险提示</h3>
+      <ul style="list-style:none;">
+        <li style="padding:5px 0 5px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 积分兑换预算需提前封顶，防止超支</li>
+        <li style="padding:5px 0 5px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 内网 IM 分享链接可能被风控拦截，需提前与 IT 沟通白名单</li>
+        <li style="padding:5px 0 5px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 激活定义要明确（首次登录 vs 完成首单任务），避免刷量</li>
+        <li style="padding:5px 0 5px 18px; position:relative; font-size:14px; color:var(--text-soft);">▸ 活动不宜超过 7 天，内网裂变热度衰减快于公网</li>
+      </ul>
+    </div>
+    <div class="insight">
+      <h3>关键洞察</h3>
+      <p>内网裂变与公网裂变最大区别是<span class="key">信任成本极低</span>（同事推荐天然可信），但<span class="key">传播天花板明确</span>（员工总数固定）。因此核心不是无限裂变，而是<span class="key">提高每个节点的激活转化率</span>——落地页体验和奖励即时性比分享机制本身更重要。</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <strong>内网分享裂变活动方案</strong> · 华为风格设计<br>
+  <span style="font-size:12px; opacity:0.7;">Generated for intranet viral growth planning</span>
+</footer>
+
+</body>
+</html>
