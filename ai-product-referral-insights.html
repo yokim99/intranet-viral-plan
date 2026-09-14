@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI产品老带新裂变增长洞察报告</title>
+<style>
+  :root {
+    --red: #C7000B;
+    --red-dark: #990009;
+    --red-light: #E8333D;
+    --bg: #f5f6f8;
+    --card: #fff;
+    --text: #1a1a1a;
+    --soft: #555;
+    --border: #e8e8e8;
+    --green: #2e9e5b;
+    --amber: #d97706;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Microsoft YaHei","微软雅黑",-apple-system,sans-serif; background:var(--bg); color:var(--text); line-height:1.75; }
+  .hero { background:linear-gradient(135deg,var(--red-dark),var(--red),var(--red-light)); color:#fff; padding:52px 24px 44px; text-align:center; position:relative; overflow:hidden; }
+  .hero::before { content:""; position:absolute; top:-70px; right:-70px; width:240px; height:240px; background:rgba(255,255,255,.08); border-radius:50%; }
+  .hero::after { content:""; position:absolute; bottom:-90px; left:-50px; width:200px; height:200px; background:rgba(255,255,255,.06); border-radius:50%; }
+  .hero h1 { font-size:30px; position:relative; z-index:1; }
+  .hero .sub { margin-top:12px; font-size:15px; opacity:.92; position:relative; z-index:1; }
+  .hero .tag { display:inline-block; margin-top:16px; background:rgba(255,255,255,.18); padding:5px 16px; border-radius:18px; font-size:12px; position:relative; z-index:1; }
+  .wrap { max-width:940px; margin:0 auto; padding:0 20px; }
+  section { padding:36px 0 8px; }
+  .sec-head { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+  .sec-num { background:var(--red); color:#fff; width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; flex-shrink:0; }
+  .sec-title { font-size:22px; font-weight:700; }
+  .card { background:var(--card); border-radius:12px; padding:22px 24px; box-shadow:0 2px 12px rgba(0,0,0,.06); margin-bottom:18px; }
+  .card h3 { font-size:16px; color:var(--red); margin-bottom:10px; }
+  .card p { color:var(--soft); font-size:14px; margin-bottom:8px; }
+  /* 步骤条 */
+  .steprow { display:flex; gap:14px; margin-bottom:14px; align-items:flex-start; }
+  .stepnum { background:var(--red); color:#fff; min-width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0; margin-top:2px; }
+  .steptext b { display:block; font-size:15px; color:var(--text); }
+  .steptext span { font-size:13px; color:var(--soft); }
+  /* 案例卡 */
+  .case { border-left:4px solid var(--red); background:#fff; border-radius:0 12px 12px 0; padding:20px 22px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+  .case-head { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px; }
+  .case-title { font-size:17px; font-weight:700; color:var(--text); }
+  .badge { font-size:11px; padding:2px 9px; border-radius:4px; background:var(--red); color:#fff; }
+  .badge.gray { background:#888; }
+  .badge.amber { background:var(--amber); }
+  .stat-row { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+  .stat { background:#fdf0f1; border:1px solid #f0d9db; border-radius:8px; padding:6px 12px; font-size:12px; }
+  .stat b { color:var(--red); font-size:14px; margin-right:4px; }
+  .case p { font-size:13.5px; color:var(--soft); }
+  .case ul { list-style:none; margin:8px 0; }
+  .case li { padding:3px 0 3px 20px; position:relative; font-size:13.5px; color:var(--soft); }
+  .case li::before { content:"▸"; position:absolute; left:2px; color:var(--red); }
+  .src { margin-top:10px; font-size:12px; background:#f7f7f7; border-radius:6px; padding:8px 12px; }
+  .src a { color:var(--red); text-decoration:none; word-break:break-all; }
+  .src a:hover { text-decoration:underline; }
+  /* 表格 */
+  table { width:100%; border-collapse:collapse; margin-top:8px; }
+  th,td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); font-size:13px; }
+  th { background:#fdf0f1; color:var(--red); font-weight:600; }
+  td b { color:var(--red); }
+  /* 流程 */
+  .flow { display:flex; flex-wrap:wrap; gap:10px; }
+  .fnode { flex:1 1 100px; background:#fff; border:1px solid #f0d9db; border-radius:10px; padding:14px 12px; text-align:center; min-width:100px; }
+  .fnode .n { font-size:20px; font-weight:700; color:var(--red); }
+  .fnode .t { font-size:12.5px; font-weight:600; margin-top:2px; }
+  .fnode .d { font-size:11px; color:var(--soft); margin-top:4px; }
+  /* 洞察 */
+  .insight { background:linear-gradient(135deg,#fff5f5,#fff); border:1px solid #f3d4d6; border-radius:12px; padding:20px 22px; margin-bottom:16px; }
+  .insight h3 { color:var(--red); font-size:15.5px; margin-bottom:8px; }
+  .insight p { font-size:13.5px; color:var(--soft); }
+  .insight .key { background:#fce8ea; color:var(--red); padding:1px 6px; border-radius:3px; font-weight:600; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:640px){ .grid2{grid-template-columns:1fr;} .hero h1{font-size:23px;} }
+  footer { background:#2b2b2b; color:#aaa; text-align:center; padding:26px 20px; font-size:12.5px; margin-top:36px; }
+  footer strong { color:#fff; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>AI产品老带新裂变增长洞察报告</h1>
+  <div class="sub">案例拆解 x 流程参考 x 方案设计关键步骤</div>
+  <div class="tag">基于7篇可校验的公开来源 · 2026-09-14 整理</div>
+</div>
+
+<div class="wrap">
+
+<!-- ===================== 一、方案设计关键步骤 ===================== -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">一</div>
+    <div class="sec-title">方案设计的关键步骤（先看这个）</div>
+  </div>
+  <div class="card">
+    <p>综合Perplexity增长负责人专访与多篇案例复盘，一套老带新裂变方案的设计按以下7步推进，每一步都有真实案例印证：</p>
+    <div class="steprow"><div class="stepnum">1</div><div class="steptext"><b>定目标与北极星指标</b><span>先明确"激活"的定义（注册？首次使用？第3次查询？）。Perplexity内部用"首次会话3次查询"作为激活里程碑指标，因为它与60天留存强相关。</span></div></div>
+    <div class="steprow"><div class="stepnum">2</div><div class="steptext"><b>验证留存再拉新</b><span>Perplexity经验：留存早期信号未出现前（如第3-4个月留存30%），不要砸钱拉新——先确认"留得住"，裂变拉来的流量才不浪费。</span></div></div>
+    <div class="steprow"><div class="stepnum">3</div><div class="steptext"><b>设计双向激励与任务阶梯</b><span>邀请人与被邀请人都要有奖励；第一档任务门槛要低到"邀1人就有奖"（笔记侠案例：3人即得699元礼包），别让参与者空手而归。</span></div></div>
+    <div class="steprow"><div class="stepnum">4</div><div class="steptext"><b>用产品价值替代现金奖励</b><span>AI产品的边际成本低（多送1个月Pro几乎零成本），虚拟特权（皮肤/内测资格/称号）比现金更可持续。Taskade声望值体系零现金撬动35%新注册。</span></div></div>
+    <div class="steprow"><div class="stepnum">5</div><div class="steptext"><b>把分享行为做成"社交货币"</b><span>用户分享的动机是塑造人设，不是帮你拉人。AI生成类产品天然占优（头像/报告/壁纸自带炫耀属性）。邀请文案用"仪式感+稀缺"替代"求分享"（国风学堂案例：转化率+170%）。</span></div></div>
+    <div class="steprow"><div class="stepnum">6</div><div class="steptext"><b>全流程即时反馈 + 防刷规则</b><span>每步操作配自动话术（强引导+稳情绪）；防刷细节决定数据真实性：仅新用户计数、卸载扣除、重装恢复、邀请码归因可追溯。</span></div></div>
+    <div class="steprow"><div class="stepnum">7</div><div class="steptext"><b>数据归因与迭代</b><span>只盯3个数：流量来源、裂变系数K（K&gt;1才能自增长）、留存率。用UTM+邀请关系链归因到人，识别超级邀请人并提前倾斜资源（Circle案例：AI预测准确率78%）。</span></div></div>
+  </div>
+</section>
+
+<!-- ===================== 二、经典老带新案例基线 ===================== -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">二</div>
+    <div class="sec-title">经典老带新案例（AI时代之前的方法基线）</div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">1. Taskade 声望值体系</span><span class="badge gray">协作工具 · 零现金裂变</span></div>
+    <div class="stat-row"><span class="stat"><b>35%</b>新注册由邀请贡献</span><span class="stat"><b>0元</b>现金成本</span></div>
+    <p>每邀请1个活跃用户得100声望值，兑换AI专属皮肤、限定头像框、内测委员会资格、提前体验权；Top100邀请人上官网感谢墙。击中"独特感+社会认同"两大心理需求，一分钱没花。邀请到5/10/20人时自动发送不同风格感谢信，50人时AI生成专属头像，形成二次传播。</p>
+    <div class="src">来源：<a href="https://www.woshipm.com/marketing/6396885.html" target="_blank">《没有预算怎么做增长？》人人都是产品经理 · 曹烨 · 2026-05-17</a></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">2. 国风学堂 邀请文案实验</span><span class="badge gray">在线教育 · 文案驱动</span></div>
+    <div class="stat-row"><span class="stat"><b>+170%</b>邀请转化提升</span><span class="stat"><b>30组</b>AI批量文案测试</span></div>
+    <p>把"邀请好友各得20元券"改为"【内测邀请】因您的优秀表现，特开放3个导师旁听证名额，可赠予热爱书法的朋友"——先抬高邀请人地位，再给有名字的"资格"而非折扣，最后限量制造稀缺。被邀请人注册后，AI自动发送个性化邮件解锁"传灯者"称号，用户截图发朋友圈形成二轮裂变。</p>
+    <div class="src">来源：<a href="https://www.woshipm.com/marketing/6396885.html" target="_blank">《没有预算怎么做增长？》人人都是产品经理 · 曹烨 · 2026-05-17</a></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">3. 笔记侠「知识宝箱」裂变</span><span class="badge gray">新媒体 · 阶梯任务标杆</span></div>
+    <div class="stat-row"><span class="stat"><b>815%</b>裂变率</span><span class="stat"><b>2万+</b>2天涨粉</span><span class="stat"><b>95%</b>新粉留存</span></div>
+    <p>三级任务阶梯：3人助力得699元礼包（低门槛建立信任）→ 8人得干货合集（社交链长的用户继续冲）→ 排行榜前3得高价值课程。每步操作后台设置反馈话术；防刷规则精细：仅新粉丝计数、取关扣除人气值、重新关注恢复。启动流量仅来自一篇阅读3k的推文。</p>
+    <div class="src">来源：<a href="https://www.woshipm.com/operate/2343401.html" target="_blank">《裂变率高达815%后，这个公众号复盘了史上最全方法论》人人都是产品经理 · 木公子 · 2019-05-21</a></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">4. 工具产品游戏化邀请</span><span class="badge gray">出海工具 · 去邀请感</span></div>
+    <div class="stat-row"><span class="stat"><b>0元</b>现金预算</span><span class="stat"><b>+5~7%</b>新增留存提升</span></div>
+    <p>核心心法"去邀请重气息"：把邀请活动包装成"免费获取会员的限时福利"，化邀请为无形。用产品核心价值（会员）做奖励，15元会员换3个新增，远低于行业10-20元/人的获客成本。游戏化晋升体系（邀3人升金牌会员）激发攀比心态，且新增提升一个台阶后保持稳定不下滑。</p>
+    <div class="src">来源：<a href="https://www.woshipm.com/operate/2128100.html" target="_blank">《增长实操案例：用游戏化的邀请裂变新增》人人都是产品经理 · 貓力 · 2019-03-27</a></div>
+  </div>
+</section>
+
+<!-- ===================== 三、AI产品裂变案例 ===================== -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">三</div>
+    <div class="sec-title">AI产品裂变增长案例（重点）</div>
+  </div>
+  <div class="card">
+    <p>AI产品的裂变有三个独特优势：<b style="color:var(--red)">边际成本近零</b>（多送一个月Pro几乎无成本）、<b style="color:var(--red)">生成内容自带传播性</b>（用户愿意晒AI产出的个性化内容）、<b style="color:var(--red)">好奇心驱动的自然流量</b>。以下案例按策略类型归类。</p>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">1. Perplexity 增长组合拳</span><span class="badge">官方一手访谈</span><span class="badge">校园裂变</span></div>
+    <div class="stat-row"><span class="stat"><b>80%</b>增长来自口碑</span><span class="stat"><b>24个月</b>Pro可累积</span><span class="stat"><b>1+1</b>双向各得1个月Pro</span></div>
+    <ul>
+      <li><b>校园学生计划</b>：edu邮箱验证后，每拉1个新用户双方各得1个月Pro，最高累积24个月，人均获客成本接近零；毕业后大概率转化为付费用户。</li>
+      <li><b>校园大使策略</b>：增长负责人Raman Malik明确表示"特别关注学生市场"——聚集核心学生用户、提供营销预算支持他们在校园推广，先做高用户密度，密度到了口碑自然引爆。</li>
+      <li><b>合作伙伴分发</b>：与LinkedIn、Xfinity、Lenny播客等合作，为合作方用户送1个月Pro——用户不用就没有成本，用了就有机会转化为长期付费。</li>
+      <li><b>增长遗憾</b>：官方坦言缺少"内在病毒循环"——没能把"分享研究发现/截图"内置到用户旅程里，但已确认分享行为带来大量流量，正想办法激励。</li>
+      <li><b>方法论金句</b>："增长领域没有中间地带"——Dropbox推荐计划、Groupon邮件营销、Pinterest SEO、Duolingo社交媒体，都是要么第一个做、要么做到极致。</li>
+    </ul>
+    <div class="src">来源：<a href="https://baijiahao.baidu.com/s?id=1818690026626584375&wfr=spider&for=pc" target="_blank">《Perplexity增长负责人万字详解：如何从0到1搭建AI产品增长体系》ZPotentials · 2024-12-17（20VC访谈编译）</a></div>
+    <div class="src">补充：<a href="https://post.smzdm.com/p/a655kx5o/" target="_blank">《AI产品"增长黑客"的10000种野路子》硅星人Pro · 2025-11-30（校园计划24个月细节）</a></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">2. Kimi 砍价守门员</span><span class="badge">国内AI · 双十一</span><span class="badge amber">反套路裂变</span></div>
+    <div class="stat-row"><span class="stat"><b>49→0.99元</b>人机砍价</span><span class="stat"><b>禁用</b>邀请好友砍价</span></div>
+    <p>用户与"砍价守门员AI"对话博弈，说服AI把49元会员价砍到最低0.99元。活动明确禁止传统"邀请好友助力"，把焦点放在人机博弈上——用户研究话术、聊哲学、写伪代码骗AI，五花八门的攻略被自发分享到社交媒体形成海量UGC，每条分享都是免费曝光。借鉴自海外产品Poke（AI嘲讽用户，433美元砍到9美元），两者共同点：把付费流程变成有戏剧性的游戏，游戏天然产生可分享的故事。</p>
+    <div class="src">来源：<a href="https://post.smzdm.com/p/a655kx5o/" target="_blank">《AI产品"增长黑客"的10000种野路子》硅星人Pro · 2025-11-30</a></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">3. Wordware Twitter人格分析</span><span class="badge">AI Agent平台</span><span class="badge amber">前店后厂</span></div>
+    <div class="stat-row"><span class="stat"><b>400万+</b>12天用户</span><span class="stat"><b>0元</b>投放</span></div>
+    <p>硬核的AI Agent开发平台做了一个免费小工具：输入Twitter账号生成毒舌人格分析报告（emoji+雷达图）。精准击中"自我探索+社交分享"两个心理，结果页天然适合截图发推。12天400万用户，部分顺着引导转化为专业产品潜在客户。"前店"（高趣味免费工具）获客传播，"后厂"（专业付费产品）负责变现，两者功能可以无关，只要能展示AI技术实力。</p>
+    <div class="src">来源：<a href="https://post.smzdm.com/p/a655kx5o/" target="_blank">《AI产品"增长黑客"的10000种野路子》硅星人Pro · 2025-11-30</a></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">4. Lensa AI头像 → 吉卜力刷屏</span><span class="badge">生成式AI</span><span class="badge amber">内容病毒传播</span></div>
+    <div class="stat-row"><span class="stat"><b>+2000%</b>单月下载涨幅</span><span class="stat"><b>2000万美元</b>单月收入</span></div>
+    <p>Lensa把开源Stable Diffusion包装成傻瓜式体验：上传自拍生成50张艺术头像。头像既展示美又显得懂AI很潮，女性用户把不同风格拼成九宫格发圈——每次发圈都是免费广告，看到的人问"这是什么App"然后自己去下载。2025年GPT-4o开放图像生成后，"吉卜力风格头像"以同样的公式再次刷屏。公式：<span style="color:var(--red);font-weight:600;">AI生成个性化内容 → 用户主动炫耀 → 观看者好奇 → 转化下载</span>。</p>
+    <div class="src">来源：<a href="https://post.smzdm.com/p/a655kx5o/" target="_blank">《AI产品"增长黑客"的10000种野路子》硅星人Pro · 2025-11-30</a></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">5. OpusClip 极限反转</span><span class="badge">AI视频剪辑</span><span class="badge amber">付费验证pivot</span></div>
+    <div class="stat-row"><span class="stat"><b>500万</b>7个月用户</span><span class="stat"><b>~1000万美元</b>年收入</span><span class="stat"><b>200人</b>付费内测起点</span></div>
+    <p>最初做AI直播工具，3个月只有200个用户——还是团队花钱请来的（每人每次20-30美元），停止付费后无人留存。但付费用户透露：唯一有价值的是"长视频自动剪成短视频"这个附属功能。团队把这个边角料剥离成独立产品OpusClip，两周数万用户注册，上线首日还没做支付系统，就有大量用户主动联系要求付钱插队。启示：裂变之前，先用最小成本验证"用户到底为什么用你"。</p>
+    <div class="src">来源：<a href="https://post.smzdm.com/p/a655kx5o/" target="_blank">《AI产品"增长黑客"的10000种野路子》硅星人Pro · 2025-11-30</a></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">6. 抢首发流量截胡</span><span class="badge">Cursor / PoYo / Banana2.io</span><span class="badge amber">蹭模型发布</span></div>
+    <p>AI行业独特现象：大模型发布即触发流量狂欢。Banana2.io在Nano Banana 2发布当天上线同款模式，新用户送20个免费额度，比官方还宽松；API平台PoYo 24小时内完成接入，72小时后该模型调用量跃居平台500+模型第一（占35%）；Cursor在Gemini 3官方发布前就放出preview入口，抢到"谁先用上"的尝鲜流量。逻辑：新模型发布时用户主动搜索尝鲜渠道，比官方更快/更便宜/门槛更低就能截获这波流量。窗口期短，且抢注域名等做法有法律风险。</p>
+    <div class="src">来源：<a href="https://post.smzdm.com/p/a655kx5o/" target="_blank">《AI产品"增长黑客"的10000种野路子》硅星人Pro · 2025-11-30</a></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><span class="case-title">7. AI个性化邀请（Fitbod / Pawply）</span><span class="badge">AI驱动裂变运营</span></div>
+    <div class="stat-row"><span class="stat"><b>+120%</b>Fitbod邀请转化</span><span class="stat"><b>94%</b>Pawply壁纸分享率</span><span class="stat"><b>$0.002</b>单张壁纸成本</span></div>
+    <ul>
+      <li><b>Fitbod</b>：AI根据用户训练数据每周生成个性化报告，邀请文案按用户画像动态生成（力量用户约"撸铁兄弟"、瑜伽用户约"瑜伽搭子"），点击率是普通营销邮件3倍。</li>
+      <li><b>Pawply</b>：用户上传狗狗照片，AI生成融入产品场景的专属壁纸（成本0.002美元/张），94%用户主动分享到Instagram并@官方账号。</li>
+      <li><b>共性</b>：AI让"千人千面的邀请触达"从需要团队变成一个人+API就能干，个性化程度越高，分享动机越强。</li>
+    </ul>
+    <div class="src">来源：<a href="https://www.woshipm.com/marketing/6396885.html" target="_blank">《没有预算怎么做增长？》人人都是产品经理 · 曹烨 · 2026-05-17</a></div>
+  </div>
+</section>
+
+<!-- ===================== 四、整体裂变流程参考 ===================== -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">四</div>
+    <div class="sec-title">整体裂变流程参考（通用8节点）</div>
+  </div>
+  <div class="card">
+    <p>综合上述案例，一套完整的AI产品老带新裂变流程如下，每个节点都标注了对应的案例出处：</p>
+    <div class="flow">
+      <div class="fnode"><div class="n">1</div><div class="t">触发分享动机</div><div class="d">用户获得价值瞬间触发，或AI生成值得晒的内容<span style="color:var(--red)">（Lensa/Wordware）</span></div></div>
+      <div class="fnode"><div class="n">2</div><div class="t">一键分享物料</div><div class="d">邀请链接/卡片按5要素设计，AI批量生成个性化文案<span style="color:var(--red)">（国风学堂）</span></div></div>
+      <div class="fnode"><div class="n">3</div><div class="t">被邀请人落地</div><div class="d">邀请人头像背书+双方都赢，免注册先体验<span style="color:var(--red)">（Perplexity免登录）</span></div></div>
+      <div class="fnode"><div class="n">4</div><div class="t">低门槛转化</div><div class="d">先体验产品价值，首次会话触达激活里程碑<span style="color:var(--red)">（Perplexity 3次查询）</span></div></div>
+      <div class="fnode"><div class="n">5</div><div class="t">双向奖励到账</div><div class="d">激活即发奖，即时反馈不等人<span style="color:var(--red)">（Perplexity 1+1个月Pro）</span></div></div>
+      <div class="fnode"><div class="n">6</div><div class="t">进度可视化</div><div class="d">阶梯进度条+里程碑感谢信，游戏化推进<span style="color:var(--red)">（Taskade/笔记侠）</span></div></div>
+      <div class="fnode"><div class="n">7</div><div class="t">新用户再分享</div><div class="d">新用户立即看到自己的邀请入口，循环开始<span style="color:var(--red)">（貓力案例闭环）</span></div></div>
+      <div class="fnode"><div class="n">8</div><div class="t">归因与放大</div><div class="d">邀请关系链追溯，识别超级邀请人倾斜资源<span style="color:var(--red)">（Circle预测78%）</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 五、共性洞察 ===================== -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">五</div>
+    <div class="sec-title">AI产品裂变的五个共性洞察</div>
+  </div>
+  <div class="insight">
+    <h3>洞察1：AI产品的裂变奖励正在从"现金"转向"产品价值"</h3>
+    <p>Perplexity送Pro时长、Taskade送虚拟特权、貓力案例送会员——AI产品边际成本近零，送1个月Pro几乎不花钱，且<span class="key">筛出来的用户本身就体验过高级功能，付费转化路径最短</span>。现金奖励反而吸引羊毛党。</p>
+  </div>
+  <div class="insight">
+    <h3>洞察2：生成内容是最强的"社交货币"，分享行为应该内置于产品</h3>
+    <p>Lensa、吉卜力、Wordware的爆发都遵循"AI生成个性化内容→用户主动炫耀"的公式。Perplexity增长负责人最大的遗憾正是"缺少内在病毒循环"——<span class="key">好的AI产品应该让分享成为使用流程的自然终点，而不是产品之外的运营动作</span>。</p>
+  </div>
+  <div class="insight">
+    <h3>洞察3：口碑占AI产品增长的大头，裂变是给口碑装上加速器</h3>
+    <p>Perplexity官方承认约80%增长来自口碑和自然流量，付费广告是双刃剑（Lyft经验：停投后安装几乎没变）。<span class="key">裂变机制的价值不是凭空造流量，而是把已经发生的口碑推荐"结构化"：可追踪、可奖励、可放大</span>。</p>
+  </div>
+  <div class="insight">
+    <h3>洞察4：密度优先于广度——先做透一个圈子再扩散</h3>
+    <p>Perplexity的校园策略逻辑：校园小、密度容易起、密度到了口碑自转。To B工具Folk在Reddit垂直板块、PingPong在知乎跨境话题，都是先在<span class="key">高相关小圈子建立密度</span>，而非全渠道撒网。</p>
+  </div>
+  <div class="insight">
+    <h3>洞察5：留不住人的裂变是慢性失血</h3>
+    <p>OpusClip花钱请200人试用才发现真需求；Perplexity坚持"留存信号出现前不砸钱拉新"。裂变系数K&gt;1的前提是<span class="key">新用户能快速体验到产品核心价值</span>——所以激活里程碑定义比裂变机制本身更重要。</p>
+  </div>
+</section>
+
+<!-- ===================== 六、来源汇总 ===================== -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">六</div>
+    <div class="sec-title">全部来源链接汇总（供校验）</div>
+  </div>
+  <div class="card">
+    <table>
+      <tr><th>文章</th><th>平台/作者/时间</th><th>链接</th></tr>
+      <tr><td><b>AI产品"增长黑客"的10000种野路子</b><br>Kimi砍价/Poke/Wordware/Lensa/OpusClip/Perplexity校园计划/抢首发</td><td>什么值得买·硅星人Pro<br>2025-11-30</td><td><a href="https://post.smzdm.com/p/a655kx5o/" target="_blank" style="color:var(--red)">post.smzdm.com/p/a655kx5o/</a></td></tr>
+      <tr><td><b>Perplexity增长负责人万字详解</b><br>口碑80%/校园大使/合作分发/激活里程碑</td><td>百家号·ZPotentials<br>2024-12-17（编译20VC访谈）</td><td><a href="https://baijiahao.baidu.com/s?id=1818690026626584375&wfr=spider&for=pc" target="_blank" style="color:var(--red)">baijiahao.baidu.com/s?id=1818690026626584375</a></td></tr>
+      <tr><td><b>没有预算怎么做增长？</b><br>Taskade/国风学堂/Fitbod/Pawply/17个零预算案例</td><td>人人都是产品经理·曹烨<br>2026-05-17</td><td><a href="https://www.woshipm.com/marketing/6396885.html" target="_blank" style="color:var(--red)">woshipm.com/marketing/6396885.html</a></td></tr>
+      <tr><td><b>裂变率高达815%后，这个公众号复盘了史上最全方法论</b><br>阶梯任务/即时反馈/防刷细节</td><td>人人都是产品经理·木公子<br>2019-05-21</td><td><a href="https://www.woshipm.com/operate/2343401.html" target="_blank" style="color:var(--red)">woshipm.com/operate/2343401.html</a></td></tr>
+      <tr><td><b>增长实操案例：用游戏化的邀请裂变新增</b><br>去邀请重气息/产品价值奖励/成本核算</td><td>人人都是产品经理·貓力<br>2019-03-27</td><td><a href="https://www.woshipm.com/operate/2128100.html" target="_blank" style="color:var(--red)">woshipm.com/operate/2128100.html</a></td></tr>
+      <tr><td><b>a16z合伙人：AI原生应用提高留存的七种方法</b><br>留存方法论（Perplexity通知策略等）</td><td>东方财富财富号<br>2024-05-09</td><td><a href="https://caifuhao.eastmoney.com/news/20240509142638449420060" target="_blank" style="color:var(--red)">caifuhao.eastmoney.com/news/20240509142638449420060</a></td></tr>
+      <tr><td><b>产品经理，如何设计好「用户裂变」产品</b><br>裂变设计方法论</td><td>小红书·产品妹纸Euphemia<br>2024-09</td><td><a href="https://www.xiaohongshu.com/explore/66ed8f1a000000002603051f" target="_blank" style="color:var(--red)">xiaohongshu.com/explore/66ed8f1a000000002603051f</a></td></tr>
+    </table>
+    <p style="margin-top:12px; font-size:12px; color:#999;">说明：以上链接均在2026-09-14实际访问验证过内容；部分平台（如小红书）可能需要登录后查看完整图文。</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <strong>AI产品老带新裂变增长洞察报告</strong> · 华为风格设计<br>
+  <span style="opacity:.7">案例洞察 x 流程参考 x 方案设计关键步骤 | 2026-09-14</span>
+</footer>
+
+</body>
+</html>
