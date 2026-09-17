@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内网分享裂变 · 数据追踪看板</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --huawei-red: #C7000B;
+            --huawei-red-light: #e8404f;
+            --huawei-red-dark: #990009;
+            --bg: #f4f4f4;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #e0e0e0;
+            --success: #52c41a;
+            --shadow: 0 2px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 4px 20px rgba(0,0,0,0.12);
+        }
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .view { min-height: 100vh; }
+
+        /* ====== 看板视图 ====== */
+        #dashboard-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            width: 100%;
+            background: linear-gradient(135deg, var(--huawei-red), var(--huawei-red-dark));
+            color: #fff;
+            padding: 28px 0 24px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(199,0,11,0.3);
+        }
+        .header h1 { font-size: 26px; font-weight: 700; letter-spacing: 1px; }
+        .header p { font-size: 14px; opacity: 0.85; margin-top: 6px; }
+        .header .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 3px 14px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+            padding: 32px 20px;
+        }
+
+        /* 输入卡片 */
+        .input-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 36px 32px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+        .input-card h2 {
+            font-size: 18px;
+            color: var(--huawei-red);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-card h2::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: var(--huawei-red);
+            border-radius: 2px;
+        }
+        .input-card .desc {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .input-group {
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        .input-group input:focus {
+            border-color: var(--huawei-red);
+        }
+        .input-group input::placeholder {
+            color: #bbb;
+        }
+        .btn-primary {
+            background: var(--huawei-red);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-primary:hover {
+            background: var(--huawei-red-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(199,0,11,0.3);
+        }
+        .btn-primary:active {-webkit-transform: translateY(0);}
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 结果卡片 */
+        .result-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            display: none;
+            animation: slideUp 0.4s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-card h2 {
+            font-size: 18px;
+            color: var(--huawei-red);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .result-card h2::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: var(--huawei-red);
+            border-radius: 2px;
+        }
+        .result-row {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+        .link-area {
+            flex: 1;
+            min-width: 280px;
+        }
+        .link-box {
+            background: #f8f8f8;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-size: 13px;
+            color: var(--text);
+            word-break: break-all;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            font-family: "Courier New", monospace;
+        }
+        .btn-copy {
+            background: #fff;
+            color: var(--huawei-red);
+            border: 1.5px solid var(--huawei-red);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-copy:hover {
+            background: var(--huawei-red);
+            color: #fff;
+        }
+        .btn-copy.copied {
+            background: var(--success);
+            color: #fff;
+            border-color: var(--success);
+        }
+        .qr-area {
+            text-align: center;
+            min-width: 200px;
+        }
+        .qr-area img {
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 8px;
+            background: #fff;
+        }
+        .qr-area .qr-label {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+        .stats-row {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+        .stat-item .stat-num {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--huawei-red);
+        }
+        .stat-item .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* 邀请记录按钮 */
+        .records-btn-area {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .btn-records {
+            background: #fff;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-records:hover {
+            border-color: var(--huawei-red);
+            color: var(--huawei-red);
+            box-shadow: var(--shadow);
+        }
+        .btn-records .count-badge {
+            background: var(--huawei-red);
+            color: #fff;
+            border-radius: 12px;
+            padding: 1px 8px;
+            font-size: 12px;
+            min-width: 20px;
+            display: inline-block;
+        }
+
+        /* 说明区 */
+        .info-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px 28px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+        .info-card h3 {
+            font-size: 15px;
+            color: var(--huawei-red);
+            margin-bottom: 12px;
+        }
+        .info-card ol {
+            padding-left: 20px;
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 2;
+        }
+        .info-card .demo-tag {
+            display: inline-block;
+            background: #fff7e6;
+            color: #d48806;
+            border: 1px solid #ffd591;
+            border-radius: 4px;
+            padding: 1px 8px;
+            font-size: 11px;
+            margin-left: 6px;
+        }
+
+        /* ====== 跳转视图 ====== */
+        #redirect-view {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--huawei-red), var(--huawei-red-dark));
+            color: #fff;
+        }
+        .redirect-box {
+            text-align: center;
+            padding: 40px;
+        }
+        .redirect-box .spinner {
+            width: 56px;
+            height: 56px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 24px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .redirect-box h2 { font-size: 22px; margin-bottom: 10px; }
+        .redirect-box p { font-size: 14px; opacity: 0.85; }
+        .redirect-box .countdown {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 16px 0;
+        }
+        .redirect-box .ref-info {
+            background: rgba(255,255,255,0.15);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            margin-top: 16px;
+            display: inline-block;
+        }
+        .redirect-box .btn-skip {
+            display: inline-block;
+            margin-top: 20px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: #fff;
+            padding: 8px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .redirect-box .btn-skip:hover { background: rgba(255,255,255,0.3); }
+
+        /* ====== 邀请记录弹窗 ====== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal {
+            background: #fff;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 720px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 {
+            font-size: 18px;
+            color: var(--huawei-red);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-header h2::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: var(--huawei-red);
+            border-radius: 2px;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+        }
+        .modal-close:hover { color: var(--text); }
+        .modal-body {
+            padding: 20px 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .records-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .records-table th {
+            background: #fafafa;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 2px solid var(--border);
+            font-size: 13px;
+        }
+        .records-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .records-table tr:hover { background: #fafafa; }
+        .records-table .empty-row td {
+            text-align: center;
+            color: var(--text-light);
+            padding: 40px;
+        }
+        .records-table .valid-count {
+            color: var(--huawei-red);
+            font-weight: 700;
+        }
+        .records-table .status-tag {
+            display: inline-block;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+        .status-active { background: #f6ffed; color: var(--success); border: 1px solid #b7eb8f; }
+        .status-idle { background: #f5f5f5; color: #999; border: 1px solid #d9d9d9; }
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        .modal-footer .summary {
+            display: flex;
+            gap: 24px;
+        }
+        .modal-footer .summary span strong {
+            color: var(--huawei-red);
+            font-size: 16px;
+        }
+        .btn-export {
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+        }
+        .btn-export:hover { border-color: var(--huawei-red); color: var(--huawei-red); }
+
+        /* Toast 提示 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s, top 0.3s;
+            pointer-events: none;
+        }
+        .toast.show { opacity: 1; top: 30px; }
+        .toast.error { background: var(--huawei-red); }
+        .toast.success { background: var(--success); }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .input-group { flex-direction: column; }
+            .result-row { flex-direction: column; align-items: center; }
+            .qr-area { width: 100%; }
+            .stats-row { flex-direction: column; gap: 12px; }
+            .modal { width: 95%; }
+            .records-table { font-size: 12px; }
+            .records-table th, .records-table td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ====== 看板视图 ====== -->
+<div id="dashboard-view" class="view">
+    <div class="header">
+        <h1>内网分享裂变 · 数据追踪看板</h1>
+        <p>输入工号生成专属分享链接，追踪有效邀请数据</p>
+        <span class="badge">DevCloud Chat · 内网裂变</span>
+    </div>
+
+    <div class="container">
+        <!-- 工号输入卡片 -->
+        <div class="input-card">
+            <h2>生成分享链接</h2>
+            <p class="desc">输入您的工号，系统将生成带埋点追踪参数的专属分享链接和二维码。其他人通过此链接进入并注册，即计为1次有效邀请。</p>
+            <div class="input-group">
+                <input type="text" id="employee-id-input" placeholder="请输入您的工号，如s0088888" autocomplete="off" />
+                <button class="btn-primary" id="generate-btn" onclick="generateLink()">生成链接</button>
+            </div>
+        </div>
+
+        <!-- 结果卡片 -->
+        <div class="result-card" id="result-card">
+            <h2>您的专属分享链接</h2>
+            <div class="result-row">
+                <div class="link-area">
+                    <div class="link-box" id="tracking-link"></div>
+                    <button class="btn-copy" id="copy-btn" onclick="copyLink()">
+                        <span id="copy-text">复制链接</span>
+                    </button>
+                </div>
+                <div class="qr-area">
+                    <img id="qr-img" src="" alt="二维码" width="200" height="200" />
+                    <div class="qr-label">扫码即可进入</div>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-num" id="stat-clicks">0</div>
+                    <div class="stat-label">链接点击次数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num" id="stat-valid">0</div>
+                    <div class="stat-label">有效邀请次数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num" id="stat-rate">0%</div>
+                    <div class="stat-label">转化率</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 邀请记录按钮 -->
+        <div class="records-btn-area">
+            <button class="btn-records" onclick="showRecords()">
+                邀请记录
+                <span class="count-badge" id="records-count">0</span>
+            </button>
+        </div>
+
+        <!-- 使用说明 -->
+        <div class="info-card">
+            <h3>使用说明<span class="demo-tag">演示模式</span></h3>
+            <ol>
+                <li>输入您的工号（如 s0088888），点击"生成链接"</li>
+                <li>复制专属链接或保存二维码，分享给同事</li>
+                <li>同事点击链接或扫码后自动跳转至 DevCloud Chat 页面</li>
+                <li>同事通过链接注册为新用户，即计为1次有效邀请</li>
+                <li>点击"邀请记录"查看所有工号的追踪数据汇总</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="footer">
+        华为云 CodeArts · 内网分享裂变数据追踪看板
+    </div>
+</div>
+
+<!-- ====== 跳转视图 ====== -->
+<div id="redirect-view" class="view">
+    <div class="redirect-box">
+        <div class="spinner"></div>
+        <h2>正在跳转至 DevCloud Chat</h2>
+        <p>已记录邀请来源，即将为您打开页面</p>
+        <div class="countdown" id="countdown">3</div>
+        <div class="ref-info" id="ref-info"></div>
+        <br>
+        <a class="btn-skip" id="skip-btn" href="https://devcloud.cn-north-4.huaweicloud.com/chat/home">立即跳转</a>
+    </div>
+</div>
+
+<!-- ====== 邀请记录弹窗 ====== -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2>邀请记录</h2>
+            <button class="modal-close" onclick="closeModalDirect()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <table class="records-table" id="records-table">
+                <thead>
+                    <tr>
+                        <th>工号</th>
+                        <th>生成时间</th>
+                        <th>点击次数</th>
+                        <th>有效邀请</th>
+                        <th>转化率</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody id="records-tbody">
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <div class="summary">
+                <span>总工号数: <strong id="total-ids">0</strong></span>
+                <span>总点击: <strong id="total-clicks">0</strong></span>
+                <span>总有效邀请: <strong id="total-valid">0</strong></span>
+            </div>
+            <button class="btn-export" onclick="exportRecords()">导出 CSV</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ====== 配置 ======
+var TARGET_URL = "https://devcloud.cn-north-4.huaweicloud.com/chat/home";
+var STORAGE_KEY = "intranet_fission_records";
+var VISIT_KEY = "intranet_fission_visits";
+var REDIRECT_DELAY = 3; // 秒
+
+// ====== 数据服务 ======
+var DataService = {
+    // 获取所有生成记录
+    getRecords: function() {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        } catch(e) { return []; }
+    },
+    // 保存生成记录
+    saveRecord: function(record) {
+        var records = this.getRecords();
+        var existing = records.find(function(r) { return r.employeeId === record.employeeId; });
+        if (existing) {
+            existing.link = record.link;
+            existing.updatedAt = new Date().toISOString();
+        } else {
+            records.push(record);
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    },
+    // 获取所有访问记录
+    getVisits: function() {
+        try {
+            return JSON.parse(localStorage.getItem(VISIT_KEY) || "[]");
+        } catch(e) { return []; }
+    },
+    // 保存访问记录
+    saveVisit: function(visit) {
+        var visits = this.getVisits();
+        visits.push(visit);
+        localStorage.setItem(VISIT_KEY, JSON.stringify(visits));
+    },
+    // 获取某工号的统计数据
+    getStats: function(employeeId) {
+        var visits = this.getVisits();
+        var refVisits = visits.filter(function(v) { return v.ref === employeeId; });
+        var clicks = refVisits.length;
+        var valid = refVisits.filter(function(v) { return v.registered === true; }).length;
+        return { clicks: clicks, valid: valid };
+    },
+    // 获取所有工号的统计汇总
+    getAllStats: function() {
+        var records = this.getRecords();
+        var visits = this.getVisits();
+        return records.map(function(r) {
+            var refVisits = visits.filter(function(v) { return v.ref === r.employeeId; });
+            r.clicks = refVisits.length;
+            r.valid = refVisits.filter(function(v) { return v.registered === true; }).length;
+            r.rate = r.clicks > 0 ? Math.round(r.valid / r.clicks * 100) : 0;
+            return r;
+        });
+    },
+    // 标记注册（模拟）
+    markRegistered: function(visitorId) {
+        var visits = this.getVisits();
+        var visit = visits.find(function(v) { return v.visitorId === visitorId; });
+        if (visit) {
+            visit.registered = true;
+            localStorage.setItem(VISIT_KEY, JSON.stringify(visits));
+        }
+    }
+};
+
+// ====== Toast 提示 ======
+function showToast(msg, type) {
+    var toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.className = "toast show" + (type ? " " + type : "");
+    setTimeout(function() {
+        toast.className = "toast" + (type ? " " + type : "");
+    }, 2500);
+}
+
+// ====== 路由 ======
+function initRouter() {
+    var params = new URLSearchParams(window.location.search);
+    var ref = params.get("ref");
+    if (ref) {
+        showRedirectView(ref);
+    } else {
+        showDashboardView();
+    }
+}
+
+function showDashboardView() {
+    document.getElementById("dashboard-view").style.display = "flex";
+    document.getElementById("redirect-view").style.display = "none";
+    updateRecordsCount();
+}
+
+function showRedirectView(ref) {
+    document.getElementById("dashboard-view").style.display = "none";
+    document.getElementById("redirect-view").style.display = "flex";
+
+    // 记录访问
+    var visitorId = "v_" + Date.now() + "_" + Math.random().toString(36).substr(2, 8);
+    var visit = {
+        ref: ref,
+        visitorId: visitorId,
+        visitedAt: new Date().toISOString(),
+        registered: false,
+        userAgent: navigator.userAgent
+    };
+    DataService.saveVisit(visit);
+
+    // 显示来源信息
+    document.getElementById("ref-info").textContent = "邀请人工号: " + ref;
+
+    // 倒计时跳转
+    var seconds = REDIRECT_DELAY;
+    document.getElementById("countdown").textContent = seconds;
+    var timer = setInterval(function() {
+        seconds--;
+        document.getElementById("countdown").textContent = seconds;
+        if (seconds <= 0) {
+            clearInterval(timer);
+            window.location.href = TARGET_URL;
+        }
+    }, 1000);
+
+    // 存储当前 visitorId 供目标页面回调（如果有）
+    sessionStorage.setItem("current_visitor", visitorId);
+    sessionStorage.setItem("current_ref", ref);
+}
+
+// ====== 生成链接 ======
+function generateLink() {
+    var input = document.getElementById("employee-id-input");
+    var employeeId = input.value.trim();
+
+    if (!employeeId) {
+        showToast("请输入工号", "error");
+        input.focus();
+        return;
+    }
+
+    // 工号格式校验（宽松：字母+数字，3-20位）
+    if (!/^[a-zA-Z0-9_-]{2,20}$/.test(employeeId)) {
+        showToast("工号格式不正确，应为字母和数字组合", "error");
+        input.focus();
+        return;
+    }
+
+    // 生成追踪链接
+    var baseUrl = window.location.origin + window.location.pathname;
+    var trackingLink = baseUrl + "?ref=" + encodeURIComponent(employeeId);
+
+    // 保存记录
+    var record = {
+        employeeId: employeeId,
+        link: trackingLink,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+    DataService.saveRecord(record);
+
+    // 显示结果
+    document.getElementById("tracking-link").textContent = trackingLink;
+    document.getElementById("qr-img").src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=" +
+        encodeURIComponent(trackingLink);
+
+    // 更新统计
+    updateStats(employeeId);
+
+    // 显示结果卡片
+    var card = document.getElementById("result-card");
+    card.style.display = "block";
+
+    // 更新邀请记录计数
+    updateRecordsCount();
+
+    showToast("链接生成成功！", "success");
+
+    // 滚动到结果
+    setTimeout(function() {
+        card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 100);
+}
+
+// ====== 更新统计 ======
+function updateStats(employeeId) {
+    var stats = DataService.getStats(employeeId);
+    document.getElementById("stat-clicks").textContent = stats.clicks;
+    document.getElementById("stat-valid").textContent = stats.valid;
+    var rate = stats.clicks > 0 ? Math.round(stats.valid / stats.clicks * 100) : 0;
+    document.getElementById("stat-rate").textContent = rate + "%";
+}
+
+// ====== 复制链接 ======
+function copyLink() {
+    var link = document.getElementById("tracking-link").textContent;
+    if (!link) return;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(function() {
+            onCopySuccess();
+        }).catch(function() {
+            fallbackCopy(link);
+        });
+    } else {
+        fallbackCopy(link);
+    }
+}
+
+function fallbackCopy(text) {
+    var textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand("copy");
+        onCopySuccess();
+    } catch(e) {
+        showToast("复制失败，请手动复制", "error");
+    }
+    document.body.removeChild(textarea);
+}
+
+function onCopySuccess() {
+    var btn = document.getElementById("copy-btn");
+    var text = document.getElementById("copy-text");
+    btn.classList.add("copied");
+    text.textContent = "已复制";
+    showToast("链接已复制到剪贴板", "success");
+    setTimeout(function() {
+        btn.classList.remove("copied");
+        text.textContent = "复制链接";
+    }, 2000);
+}
+
+// ====== 邀请记录 ======
+function updateRecordsCount() {
+    var records = DataService.getRecords();
+    document.getElementById("records-count").textContent = records.length;
+}
+
+function showRecords() {
+    var allStats = DataService.getAllStats();
+    var tbody = document.getElementById("records-tbody");
+
+    if (allStats.length === 0) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="6">暂无邀请记录，请先生成分享链接</td></tr>';
+    } else {
+        tbody.innerHTML = allStats.map(function(r) {
+            var createdAt = new Date(r.createdAt).toLocaleString("zh-CN", {
+                month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit"
+            });
+            var status = r.valid > 0
+                ? '<span class="status-tag status-active">活跃</span>'
+                : '<span class="status-tag status-idle">待激活</span>';
+            return '<tr>' +
+                '<td><strong>' + escapeHtml(r.employeeId) + '</strong></td>' +
+                '<td>' + createdAt + '</td>' +
+                '<td>' + r.clicks + '</td>' +
+                '<td class="valid-count">' + r.valid + '</td>' +
+                '<td>' + r.rate + '%</td>' +
+                '<td>' + status + '</td>' +
+                '</tr>';
+        }).join("");
+    }
+
+    // 汇总
+    var totalClicks = allStats.reduce(function(s, r) { return s + r.clicks; }, 0);
+    var totalValid = allStats.reduce(function(s, r) { return s + r.valid; }, 0);
+    document.getElementById("total-ids").textContent = allStats.length;
+    document.getElementById("total-clicks").textContent = totalClicks;
+    document.getElementById("total-valid").textContent = totalValid;
+
+    document.getElementById("modal-overlay").style.display = "flex";
+}
+
+function closeModal(event) {
+    if (event.target === document.getElementById("modal-overlay")) {
+        document.getElementById("modal-overlay").style.display = "none";
+    }
+}
+
+function closeModalDirect() {
+    document.getElementById("modal-overlay").style.display = "none";
+}
+
+// ====== 导出CSV ======
+function exportRecords() {
+    var allStats = DataService.getAllStats();
+    if (allStats.length === 0) {
+        showToast("暂无记录可导出", "error");
+        return;
+    }
+
+    var csv = "\uFEFF工号,生成时间,点击次数,有效邀请,转化率\n";
+    allStats.forEach(function(r) {
+        csv += r.employeeId + "," +
+               r.createdAt + "," +
+               r.clicks + "," +
+               r.valid + "," +
+               r.rate + "%\n";
+    });
+
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "邀请记录_" + new Date().toISOString().slice(0,10) + ".csv";
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast("CSV 导出成功", "success");
+}
+
+// ====== 工具函数 ======
+function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+// ====== 模拟注册回调 ======
+// 目标页面注册成功后可调用此接口（通过 postMessage 或 URL 参数）
+window.addEventListener("message", function(event) {
+    if (event.data && event.data.type === "registration_success") {
+        var visitorId = sessionStorage.getItem("current_visitor");
+        if (visitorId) {
+            DataService.markRegistered(visitorId);
+        }
+    }
+});
+
+// ====== 回车键支持 ======
+document.getElementById("employee-id-input").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+        generateLink();
+    }
+});
+
+// ====== 初始化 ======
+initRouter();
+</script>
+
+</body>
+</html>
